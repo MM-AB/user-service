@@ -23,7 +23,7 @@ import com.rso40.userservice.dto.UserRequest;
 @AutoConfigureMockMvc
 class UserServiceApplicationTests {
 
-	@Container
+	/*@Container
 	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:3.2.4");
 	@Autowired
 	private MockMvc mockMvc;
@@ -53,6 +53,6 @@ class UserServiceApplicationTests {
 			.email("ab0555@student.uni-lj.si")
 			.password("rso2022")
 			.build();
-	}
+	}*/
 
 }
