@@ -1,11 +1,6 @@
 FROM openjdk:19
-
 WORKDIR /opt
-
 ENV PORT 8080
-
 EXPOSE 8080
-
-ADD target/user-service.jar user-service.jar
-
-ENTRYPOINT [ "java", "-jar", "user-service.jar" ]
+COPY target/*.jar /opt/app.jar
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar

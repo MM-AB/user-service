@@ -21,10 +21,13 @@ public class UserService {
 
     public void createUser(UserRequest userRequest){
         User user = User.builder()
-            .name(userRequest.getName())
-            .email(userRequest.getEmail())
-            .password(userRequest.getPassword())
-            .build();
+                .name(userRequest.getName())
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
+                .address(userRequest.getAddress())
+                .admin(userRequest.getAdmin())
+                .build();
+
 
         userRepository.save(user);
         log.info("User {} is saved.", user.getId());
@@ -38,11 +41,13 @@ public class UserService {
 
     private UserResponse mapToUserResponse(User user){
         return UserResponse.builder()
-            .id(user.getId())
-            .name(user.getName())
-            .email(user.getEmail())
-            .password(user.getPassword())
-            .build();
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .address(user.getAddress())
+                .admin(user.getAdmin())
+                .build();
     }
     
 }

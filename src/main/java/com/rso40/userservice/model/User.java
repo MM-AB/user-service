@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Document(value = "user")
 @AllArgsConstructor
 @Builder
@@ -20,5 +22,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String address;
+    private BigDecimal admin;
     
 }
