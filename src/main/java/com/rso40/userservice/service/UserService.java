@@ -12,6 +12,8 @@ import com.rso40.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.naming.NameNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -38,6 +40,18 @@ public class UserService {
 
         return users.stream().map(this::mapToUserResponse).toList();
     }
+
+        //spremen v id, k ga spraviš od logina
+    public UserResponse getUserInfo(String name) throws NameNotFoundException{
+        User user = userRepository.findByName("Anja");
+        if (user == null){
+            throw new NameNotFoundException("User not found");
+        }
+        System.out.println("get user neki");
+        System.out.println(user);
+        return null;
+    }
+
 
     private UserResponse mapToUserResponse(User user){
         return UserResponse.builder()
