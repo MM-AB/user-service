@@ -33,7 +33,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("order")
+    @GetMapping("/order")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView newOrder (){
         ModelAndView modelAndView = new ModelAndView();
@@ -49,7 +49,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("order-history")
+    @GetMapping("/order-history")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView orderHistory (){
         ModelAndView modelAndView = new ModelAndView();
@@ -67,7 +67,7 @@ public class UserController {
 
 
     //End point
-    @PostMapping("post-order")
+    @PostMapping("/post-order")
     @ResponseStatus(HttpStatus.CREATED)
     public ModelAndView createOrder(OrderReq orderReq, @RequestParam String name, @RequestParam String address, @RequestParam BigDecimal price){
         orderReq.setName(name);
