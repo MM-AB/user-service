@@ -28,7 +28,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public String index (Model model){
         //ModelAndView modelAndView = new ModelAndView();
