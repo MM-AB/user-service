@@ -15,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.naming.NameNotFoundException;
 
 @RestController
 //@Controller
@@ -26,17 +25,12 @@ import javax.naming.NameNotFoundException;
 @RequiredArgsConstructor
 public class UserController {
 
+    private static final Object API_KEY = "";
+    private static final String PATH_URL = "http://20.120.124.86"; //http://20.120.124.86 //http://localhost:8082
     private final UserService userService;
 
-    /*@GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public String index (Model model){
-        //ModelAndView modelAndView = new ModelAndView();
-        //modelAndView.setViewName("index");
-        return "index";
-    }*/
 
-    @GetMapping("")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView index (){
         ModelAndView modelAndView = new ModelAndView();
@@ -44,21 +38,6 @@ public class UserController {
         return modelAndView;
     }
 
-    /*@GetMapping("/order")
-    @ResponseStatus(HttpStatus.OK)
-    public String newOrder (Model model){
-        //ModelAndView modelAndView = new ModelAndView();
-        RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper mapper = new ObjectMapper();
-
-        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity("http://localhost:8082/order/products", ProductRes[].class);
-        List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
-        //System.out.println(productRes);
-
-        //modelAndView.setViewName("order");
-        model.addAttribute("productRes",productRes);
-        return "order";
-    }*/
 
     @GetMapping("/order")
     @ResponseStatus(HttpStatus.OK)
@@ -67,7 +46,7 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity("http://20.120.124.86/order/products", ProductRes[].class); //6http://localhost:8082
+        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/products", ProductRes[].class);
         List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
         //System.out.println(productRes);
 
@@ -76,21 +55,6 @@ public class UserController {
         return modelAndView;
     }
 
-    /*@GetMapping("/order-history")
-    @ResponseStatus(HttpStatus.OK)
-    public String orderHistory (Model model){
-        //ModelAndView modelAndView = new ModelAndView();
-        RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper mapper = new ObjectMapper();
-
-        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity("http://localhost:8082/order", OrderRes[].class);
-        List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
-        //System.out.println(orderRes);
-
-        //modelAndView.setViewName("orders");
-        model.addAttribute("orderRes",orderRes);
-        return "orders";
-    }*/
 
     @GetMapping("/order-history")
     @ResponseStatus(HttpStatus.OK)
@@ -99,7 +63,7 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity("http://20.120.124.86/order", OrderRes[].class); //http://20.120.124.86/ //http://localhost:8082/
+        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order", OrderRes[].class);
         List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
         //System.out.println(orderRes);
 
@@ -108,27 +72,6 @@ public class UserController {
         return modelAndView;
     }
 
-
-    //End point
-    /*@PostMapping("/post-order")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String createOrder(Model model, OrderReq orderReq, @RequestParam String name, @RequestParam String address, @RequestParam BigDecimal price){
-        orderReq.setName(name);
-        orderReq.setPrice(price);
-        orderReq.setUserId("1");
-        orderReq.setAddress(address);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        //System.out.println(orderReq);
-
-        ResponseEntity<OrderReq> result = restTemplate.postForEntity("http://localhost:8082/order", orderReq, OrderReq.class);
-
-
-        //ModelAndView modelAndView = new ModelAndView();
-        //modelAndView.setViewName("neworder");
-        return "neworder";
-    }*/
 
     @PostMapping("/post-order")
     @ResponseStatus(HttpStatus.CREATED)
@@ -142,12 +85,65 @@ public class UserController {
 
         //System.out.println(orderReq);
 
-        ResponseEntity<OrderReq> result = restTemplate.postForEntity("http://20.120.124.86/order", orderReq, OrderReq.class); //http://localhost:8082/order
+        ResponseEntity<OrderReq> result = restTemplate.postForEntity(PATH_URL + "/order", orderReq, OrderReq.class);
 
+        // Get time info
+        String time = getTime();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("neworder");
+        modelAndView.getModelMap().addAttribute("time",time);
         return modelAndView;
     }
 
+    @GetMapping("/location")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView getLocation(){
+
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host("maps.googleapis.com")
+                .path("/maps/api/geocode/json")
+                .queryParam("address", "Vilharjeva 1,ljubljana,SI")
+                .queryParam("key", API_KEY)
+                .build();
+
+        ResponseEntity<GeoResponse> geoResponse = new RestTemplate().getForEntity(uri.toUriString(), GeoResponse.class);
+
+        GeoResponse response = geoResponse.getBody();
+
+        String address = response.getResult()[0].getAddress();
+        double lat = response.getResult()[0].getGeometry().getLocation().getLat();
+        double lng = response.getResult()[0].getGeometry().getLocation().getLng();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("location");
+        modelAndView.getModelMap().addAttribute("address",address);
+        modelAndView.getModelMap().addAttribute("lat",lat);
+        modelAndView.getModelMap().addAttribute("lng",lng);
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/dist")
+    @ResponseStatus(HttpStatus.OK)
+    public String getTime() {
+
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host("maps.googleapis.com")
+                .path("/maps/api/directions/json")
+                .queryParam("origin", "Večna pot 113,ljubljana,SI")
+                .queryParam("destination", "Vilharjeva 1,ljubljana,SI")
+                .queryParam("key", API_KEY)
+                .build();
+        ResponseEntity<DistResponse> distResponse = new RestTemplate().getForEntity(uri.toUriString(), DistResponse.class);
+
+        DistResponse response = distResponse.getBody();
+
+        String time = response.getRoutes()[0].getLegs()[0].getDuration().getText();
+
+        return time;
+    }
 }
