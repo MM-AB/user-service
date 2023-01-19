@@ -20,31 +20,31 @@ import org.springframework.ui.Model;
 
 import javax.naming.NameNotFoundException;
 
-//@RestController
-@Controller
+@RestController
+//@Controller
 @RequestMapping("user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    /*@GetMapping
     @ResponseStatus(HttpStatus.OK)
     public String index (Model model){
         //ModelAndView modelAndView = new ModelAndView();
         //modelAndView.setViewName("index");
         return "index";
-    }
+    }*/
 
-    /*@GetMapping("")
+    @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView index (){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         return modelAndView;
-    }*/
+    }
 
-    @GetMapping("/order")
+    /*@GetMapping("/order")
     @ResponseStatus(HttpStatus.OK)
     public String newOrder (Model model){
         //ModelAndView modelAndView = new ModelAndView();
@@ -58,25 +58,25 @@ public class UserController {
         //modelAndView.setViewName("order");
         model.addAttribute("productRes",productRes);
         return "order";
-    }
+    }*/
 
-    /*@GetMapping("/order")
+    @GetMapping("/order")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView newOrder (){
         ModelAndView modelAndView = new ModelAndView();
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity("http://localhost:8082/order/products", ProductRes[].class);
+        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity("http://20.120.124.86/order/products", ProductRes[].class); //6http://localhost:8082
         List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
         //System.out.println(productRes);
 
         modelAndView.setViewName("order");
         modelAndView.getModelMap().addAttribute("productRes",productRes);
         return modelAndView;
-    }*/
+    }
 
-    @GetMapping("/order-history")
+    /*@GetMapping("/order-history")
     @ResponseStatus(HttpStatus.OK)
     public String orderHistory (Model model){
         //ModelAndView modelAndView = new ModelAndView();
@@ -90,27 +90,27 @@ public class UserController {
         //modelAndView.setViewName("orders");
         model.addAttribute("orderRes",orderRes);
         return "orders";
-    }
+    }*/
 
-    /*@GetMapping("/order-history")
+    @GetMapping("/order-history")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView orderHistory (){
         ModelAndView modelAndView = new ModelAndView();
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity("http://localhost:8082/order", OrderRes[].class);
+        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity("http://20.120.124.86/order", OrderRes[].class); //http://20.120.124.86/ //http://localhost:8082/
         List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
         //System.out.println(orderRes);
 
         modelAndView.setViewName("orders");
         modelAndView.getModelMap().addAttribute("orderRes",orderRes);
         return modelAndView;
-    }*/
+    }
 
 
     //End point
-    @PostMapping("/post-order")
+    /*@PostMapping("/post-order")
     @ResponseStatus(HttpStatus.CREATED)
     public String createOrder(Model model, OrderReq orderReq, @RequestParam String name, @RequestParam String address, @RequestParam BigDecimal price){
         orderReq.setName(name);
@@ -128,9 +128,9 @@ public class UserController {
         //ModelAndView modelAndView = new ModelAndView();
         //modelAndView.setViewName("neworder");
         return "neworder";
-    }
+    }*/
 
-    /*@PostMapping("/post-order")
+    @PostMapping("/post-order")
     @ResponseStatus(HttpStatus.CREATED)
     public ModelAndView createOrder(OrderReq orderReq, @RequestParam String name, @RequestParam String address, @RequestParam BigDecimal price){
         orderReq.setName(name);
@@ -142,12 +142,12 @@ public class UserController {
 
         //System.out.println(orderReq);
 
-        ResponseEntity<OrderReq> result = restTemplate.postForEntity("http://localhost:8082/order", orderReq, OrderReq.class);
+        ResponseEntity<OrderReq> result = restTemplate.postForEntity("http://20.120.124.86/order", orderReq, OrderReq.class); //http://localhost:8082/order
 
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("neworder");
         return modelAndView;
-    }*/
+    }
 
 }
