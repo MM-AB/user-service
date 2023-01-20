@@ -26,7 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserController {
 
     private static final Object API_KEY = "AIzaSyBrviUpRLRrcjDKcoIe-8ysw0Lcsf1ew_8";
-    private static final String PATH_URL = "http://localhost:8082"; //http://20.120.124.86 //http://localhost:8082
+    private static final String PATH_URL = "http://20.120.124.86"; //http://20.120.124.86 //http://localhost:8082
     private final UserService userService;
 
 
