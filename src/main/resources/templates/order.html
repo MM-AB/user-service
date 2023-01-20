@@ -35,7 +35,7 @@
                 <td th:text="${product.restaurant}">Restaurant</td>
                 <td th:text="${product.address}">Address</td>
                 <td th:text="${product.price}">Price</td>
-                <td><form th:action="@{/user/post-order}" method="post">
+                <td><form th:action="@{/user/user/post-order}" method="post">
                     <input type="text" id="name" th:name="name" th:value="${product.name}" style="display: none" />
                     <input type="text" id="price" th:name="price" th:value="${product.price}" class="form-control" style="display: none" />
                     <input type="text" id="address" th:name="address" th:value="${product.address}" class="form-control" style="display: none" />
@@ -49,7 +49,7 @@
 </body>
 <body>
 <div class="container text-center">
-    <h3><a th:href="@{~/user/order-history}">See all orders</a></h3> <!-- /order-history -->
+    <h3><a th:href="@{~/user/user/order-history}">See all orders</a></h3> <!-- /order-history -->
 </div>
 </body>
 </html>

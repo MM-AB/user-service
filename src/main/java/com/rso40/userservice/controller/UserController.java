@@ -25,7 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class UserController {
 
-    private static final Object API_KEY = "";
+    private static final Object API_KEY = "AIzaSyBrviUpRLRrcjDKcoIe-8ysw0Lcsf1ew_8";
     private static final String PATH_URL = "http://20.120.124.86"; //http://20.120.124.86 //http://localhost:8082
     private final UserService userService;
 
@@ -46,7 +46,7 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/products", ProductRes[].class);
+        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order/products", ProductRes[].class);
         List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
         //System.out.println(productRes);
 
@@ -63,7 +63,7 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order", OrderRes[].class);
+        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order", OrderRes[].class);
         List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
         //System.out.println(orderRes);
 
@@ -85,7 +85,7 @@ public class UserController {
 
         //System.out.println(orderReq);
 
-        ResponseEntity<OrderReq> result = restTemplate.postForEntity(PATH_URL + "/order", orderReq, OrderReq.class);
+        ResponseEntity<OrderReq> result = restTemplate.postForEntity(PATH_URL + "/order/order", orderReq, OrderReq.class);
 
         // Get time info
         String time = getTime();
