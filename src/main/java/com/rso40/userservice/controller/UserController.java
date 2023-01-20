@@ -46,13 +46,20 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order/products", ProductRes[].class);
-        List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
-        //System.out.println(productRes);
+        try{
+            ResponseEntity<ProductRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order/products", ProductRes[].class);
+            List<ProductRes> productRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<ProductRes>>() {});
+            //System.out.println(productRes);
 
-        modelAndView.setViewName("order");
-        modelAndView.getModelMap().addAttribute("productRes",productRes);
-        return modelAndView;
+            modelAndView.setViewName("order");
+            modelAndView.getModelMap().addAttribute("productRes",productRes);
+            return modelAndView;
+        }
+        catch (Exception e){
+            modelAndView.setViewName("index2");
+            return modelAndView;
+        }
+
     }
 
 
@@ -63,13 +70,21 @@ public class UserController {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
 
-        ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order", OrderRes[].class);
-        List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
-        //System.out.println(orderRes);
+        try{
+            ResponseEntity<OrderRes[]> resResponseEntity = restTemplate.getForEntity(PATH_URL+"/order/order", OrderRes[].class);
+            List<OrderRes> orderRes = mapper.convertValue(resResponseEntity.getBody(), new TypeReference<List<OrderRes>>() {});
+            //System.out.println(orderRes);
 
-        modelAndView.setViewName("orders");
-        modelAndView.getModelMap().addAttribute("orderRes",orderRes);
-        return modelAndView;
+            modelAndView.setViewName("orders");
+            modelAndView.getModelMap().addAttribute("orderRes",orderRes);
+            return modelAndView;
+        }
+        catch (Exception e){
+            modelAndView.setViewName("index2");
+            return modelAndView;
+        }
+
+
     }
 
 
@@ -82,47 +97,62 @@ public class UserController {
         orderReq.setAddress(address);
 
         RestTemplate restTemplate = new RestTemplate();
+        ModelAndView modelAndView = new ModelAndView();
 
         //System.out.println(orderReq);
 
-        ResponseEntity<OrderReq> result = restTemplate.postForEntity(PATH_URL + "/order/order", orderReq, OrderReq.class);
+        try{
+            ResponseEntity<OrderReq> result = restTemplate.postForEntity(PATH_URL + "/order/order", orderReq, OrderReq.class);
 
-        // Get time info
-        String time = getTime();
+            // Get time info
+            String time = getTime();
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("neworder");
-        modelAndView.getModelMap().addAttribute("time",time);
-        return modelAndView;
+
+            modelAndView.setViewName("neworder");
+            modelAndView.getModelMap().addAttribute("time",time);
+            return modelAndView;
+        }
+        catch (Exception e){
+            modelAndView.setViewName("index2");
+            return modelAndView;
+        }
     }
 
     @GetMapping("/location")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView getLocation(){
-
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("maps.googleapis.com")
-                .path("/maps/api/geocode/json")
-                .queryParam("address", "Vilharjeva 1,ljubljana,SI")
-                .queryParam("key", API_KEY)
-                .build();
-
-        ResponseEntity<GeoResponse> geoResponse = new RestTemplate().getForEntity(uri.toUriString(), GeoResponse.class);
-
-        GeoResponse response = geoResponse.getBody();
-
-        String address = response.getResult()[0].getAddress();
-        double lat = response.getResult()[0].getGeometry().getLocation().getLat();
-        double lng = response.getResult()[0].getGeometry().getLocation().getLng();
-
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("location");
-        modelAndView.getModelMap().addAttribute("address",address);
-        modelAndView.getModelMap().addAttribute("lat",lat);
-        modelAndView.getModelMap().addAttribute("lng",lng);
 
-        return modelAndView;
+        try{
+            UriComponents uri = UriComponentsBuilder.newInstance()
+                    .scheme("https")
+                    .host("maps.googleapis.com")
+                    .path("/maps/api/geocode/json")
+                    .queryParam("address", "Vilharjeva 1,ljubljana,SI")
+                    .queryParam("key", API_KEY)
+                    .build();
+
+            ResponseEntity<GeoResponse> geoResponse = new RestTemplate().getForEntity(uri.toUriString(), GeoResponse.class);
+
+            GeoResponse response = geoResponse.getBody();
+
+            String address = response.getResult()[0].getAddress();
+            double lat = response.getResult()[0].getGeometry().getLocation().getLat();
+            double lng = response.getResult()[0].getGeometry().getLocation().getLng();
+
+
+            modelAndView.setViewName("location");
+            modelAndView.getModelMap().addAttribute("address",address);
+            modelAndView.getModelMap().addAttribute("lat",lat);
+            modelAndView.getModelMap().addAttribute("lng",lng);
+
+            return modelAndView;
+        }
+        catch (Exception e){
+            modelAndView.setViewName("index2");
+            return modelAndView;
+        }
+
     }
 
 
@@ -130,20 +160,27 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String getTime() {
 
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("maps.googleapis.com")
-                .path("/maps/api/directions/json")
-                .queryParam("origin", "Večna pot 113,ljubljana,SI")
-                .queryParam("destination", "Vilharjeva 1,ljubljana,SI")
-                .queryParam("key", API_KEY)
-                .build();
-        ResponseEntity<DistResponse> distResponse = new RestTemplate().getForEntity(uri.toUriString(), DistResponse.class);
+        try{
+            UriComponents uri = UriComponentsBuilder.newInstance()
+                    .scheme("https")
+                    .host("maps.googleapis.com")
+                    .path("/maps/api/directions/json")
+                    .queryParam("origin", "Večna pot 113,ljubljana,SI")
+                    .queryParam("destination", "Vilharjeva 1,ljubljana,SI")
+                    .queryParam("key", API_KEY)
+                    .build();
+            ResponseEntity<DistResponse> distResponse = new RestTemplate().getForEntity(uri.toUriString(), DistResponse.class);
 
-        DistResponse response = distResponse.getBody();
+            DistResponse response = distResponse.getBody();
 
-        String time = response.getRoutes()[0].getLegs()[0].getDuration().getText();
+            String time = response.getRoutes()[0].getLegs()[0].getDuration().getText();
 
-        return time;
+            return time;
+
+        }
+        catch (Exception e){
+            String time = "UNKNOWN";
+            return time;
+        }
     }
 }
